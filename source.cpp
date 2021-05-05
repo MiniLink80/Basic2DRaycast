@@ -61,7 +61,7 @@ int main(){
     //This one dimensional array will be written on the console at every frame.
     wchar_t *screen = new wchar_t[w*h]; 
     
-    //we fill it with spaces to prevent weird shit from happening
+    //Fill it with spaces to prevent weird shit from happening
     for (int i = 0; i < h; i++){
         for (int j = 0; j < w; j++){
             screen[i*w+j] = ' ';
@@ -173,7 +173,7 @@ int main(){
         }   
         
 
-        //the minimap is drawn
+        //The minimap is drawn
         for (int i = 0; i < 16; i++){
             for (int j  = 0; j < 16; j++){
                 if (map[i][j] == 1)
