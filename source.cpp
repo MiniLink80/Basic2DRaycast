@@ -155,19 +155,24 @@ int main(){
                     }
                 }
 
-                //Empty space if the player is close enough
+                //Empty space if the ray is close enough
                 else {
                     for (int i = (int)(h-size)/2; i < (h+size)/2; i++){
                         screen[Pos(a, i)] = ' ';
                     }
                 }
 
-                //Fill floor and ceiling
+                //Fill ceiling and floor
                 for (int i = 0; i < (int)(h-size)/2; i++){
                     screen[Pos(a, i)] = ' ';
                 }
                 for (int i = (int)(h+size)/2; i < h; i++){
-                    screen[Pos(a, i)] = ' ';
+                    if (i < h-9)
+                        screen[Pos(a, i)] = '.';
+                    else if (i < h-4)
+                        screen[Pos(a, i)] = 'x';
+                    else
+                        screen[Pos(a, i)] = '#';
                 }
             }
         }   
