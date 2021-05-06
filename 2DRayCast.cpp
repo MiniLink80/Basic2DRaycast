@@ -40,10 +40,10 @@ int Pos(float x, float y){
 
 //Be careful not to set the position inside of a wall. 
 //I will not be held responsible for anything that happens if you're not careful.
-float x = 13.68;
-float y = 2.27;
-float angle = -0.77;
-float FOV = PI/2;
+float x = 7.0;
+float y = 7.0;
+float angle = 0.0;
+float FOV = PI/3;
 
 
 //Checks that there's no collision and moves
@@ -133,7 +133,7 @@ int main(){
             }
 
             float distance = sqrt((rayX-x)*(rayX-x)+(rayY-y)*(rayY-y));
-            int size = (int)(h/distance)*1.25;
+            int size = (int)(h/distance);
             
             //Fill everything if size is above 119 to prevent crashing for some unknown reason
             if (size > 119){
@@ -184,7 +184,7 @@ int main(){
                 if (map[i][j] == 1)
                     screen[Pos(j, i)+w] = '#';
                 else
-                    screen[Pos(j, i)+w] = '.';
+                    screen[Pos(j, i)+w] = ' ';
             }
         }
         
