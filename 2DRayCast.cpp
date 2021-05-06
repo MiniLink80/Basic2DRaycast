@@ -1,3 +1,19 @@
+/*
+This is a doom-like pseudo-3D rendering program. This code was inspired by javidx9's
+first person shooter code. I only copied the rendering logic (writing onto the console efficiently)
+and a weird formula to find the angle of a ray with a variable FOV. 
+The rest of the logic is coded by yours truly. 
+The way it works is that several rays are cast from the player (120 to be precise)
+and each ray's intersection point with a wall is found. As soon as a ray hits a wall,
+a vertical line is drawn onto the screen at the appropriate horizontal position. 
+The line's length basically gives this illusion of 3d perspective.
+The further away we are from the wall, the smaller that line will be. Since we know the 
+distance between a wall and a player we can also shade it according to its distance
+to give a better illusion.
+Use WASD-QE to move around.
+*/
+
+
 #define UNICODE
 #include <windows.h>
 #include <stdio.h>
@@ -5,8 +21,8 @@
 
 #include <chrono>
 
-#define SPEED 3.5
-#define ANGLE_SPEED 1.7
+#define SPEED 3
+#define ANGLE_SPEED 1.5
 #define PI 3.141592f
 
 
@@ -34,12 +50,12 @@ int map[16][16] = {
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 };
 
+//Cute lil function to find the position with x and y coordinates
 int Pos(float x, float y){
     return w*(int)y+(int)x;
 }
 
 //Be careful not to set the position inside of a wall. 
-//I will not be held responsible for anything that happens if you're not careful.
 float x = 7.0;
 float y = 7.0;
 float angle = 0.0;
@@ -98,12 +114,16 @@ int main(){
         if(GetAsyncKeyState('W')){
             ChangePos(cosf(angle), sinf(angle), screen, dt);
         }
+        if(GetAsyncKeyState('E')){
+            ChangePos(cosf(angle+PI/2)*0.6, sinf(angle+PI/2)*0.6, screen, dt);
+        }
+        if(GetAsyncKeyState('Q')){
+            ChangePos(-cosf(angle+PI/2)*0.6, -sinf(angle+PI/2)*0.6, screen, dt);
+        }
         if (GetAsyncKeyState(27)){ //escape
             break;
         }
         
-
-        float middleRayX, middleRayY;
         //120 rays are cast.
         for (int a = 0; a < w; a++){
             //Weird formula stolen from javidx9. This is the angle of the current ray.
@@ -115,7 +135,7 @@ int main(){
             float rayY = y;
 
             //The ray's position is incremented by a small step each time
-            //to find the precise moment of contact with the wall
+            //to find the precise moment of contact with the wall.
             while (!hitWall && stepCount < 1000){
                 
                 rayX += 0.025 * cosf(curA);
@@ -127,46 +147,42 @@ int main(){
                     stepCount++;
             }
 
-            if (a == 60){
-                middleRayX = rayX;
-                middleRayY = rayY;
-            }
-
             float distance = sqrt((rayX-x)*(rayX-x)+(rayY-y)*(rayY-y));
             int size = (int)(h/distance);
             
-            //Fill everything if size is above 119 to prevent crashing for some unknown reason
-            if (size > 119){
+            //Fill everything if size is above 39 to prevent a segmentation fault.
+            if (size > 39){
                 for (int i = 0; i < h; i++){
                     screen[Pos(a, i)] = 0x2588;
                 }
             }
             else{
-                //Check if the ray is close to a cube edge and render the edge accordingly
+                //Check if the ray is close to a cube edge and render the edge accordingly.
                 if (fabsf(rayX - round(rayX)) > 0.05 || fabsf(rayY - round(rayY)) > 0.05){
                     for (int i = (int)(h-size)/2; i < (h+size)/2; i++){
-                        //The wall is darker as we get further away from it
+                        //The wall is darker as we get further away from it.
                         int tile;
-                        if (distance < 3.0)	    	tile = 0x2588;
+                        if (distance < 3.0)	        tile = 0x2588;
                         else if (distance < 6.0)	tile = 0x2593;
                         else if (distance < 12.0)	tile = 0x2592;
-                        else if (distance < 16.0)	tile = 0x2591;
+                        else                    	tile = 0x2591;
                         screen[Pos(a, i)] = tile;
                     }
                 }
 
-                //Empty space if the ray is close enough
+                //Empty space if the ray is close enough to render the edges as dark seams
                 else {
                     for (int i = (int)(h-size)/2; i < (h+size)/2; i++){
                         screen[Pos(a, i)] = ' ';
                     }
                 }
 
-                //Fill ceiling and floor
+                //Fill ceiling and floor.
                 for (int i = 0; i < (int)(h-size)/2; i++){
                     screen[Pos(a, i)] = ' ';
                 }
                 for (int i = (int)(h+size)/2; i < h; i++){
+                    //Shade floor for next-gen graphics.
                     if (i < h-9)
                         screen[Pos(a, i)] = '.';
                     else if (i < h-4)
@@ -178,7 +194,7 @@ int main(){
         }   
         
 
-        //The minimap is drawn
+        //The minimap is drawn.
         for (int i = 0; i < 16; i++){
             for (int j  = 0; j < 16; j++){
                 if (map[i][j] == 1)
@@ -188,7 +204,7 @@ int main(){
             }
         }
         
-        swprintf_s(screen, 70, L"X=%.2f Y=%.2f Angle=%.2f, rX=%.2f rY=%.2f FPS=%.2f", x, y, angle, middleRayX, middleRayY, 1.0f/dt);
+        swprintf_s(screen, 40, L"X=%.2f Y=%.2f Angle=%.2f, FPS=%.2f", x, y, angle, 1.0f/dt);
         screen[Pos(x,y)+w] = 'O';
         screen[w * h - 1] = '\0';
         WriteConsoleOutputCharacter(hConsole, screen, h*w, {0, 0}, &dwBytesWritten);
