@@ -7,6 +7,7 @@ the screen array inside of the while loop.
 #define UNICODE
 #include <windows.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <chrono>
 
 using namespace std;
@@ -23,11 +24,7 @@ int main(){
     wchar_t *screen = new wchar_t[w*h]; 
     
     //Fill it with spaces first to prevent weird stuff from happening
-    for (int i = 0; i < h; i++){
-        for (int j = 0; j < w; j++){
-            screen[i*w+j] = ' ';
-        }
-    }
+    memset(screen, ' ', h*w*sizeof(wchar_t));
 
     //Set the screen up
 	HANDLE hConsole = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);

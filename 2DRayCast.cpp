@@ -17,6 +17,7 @@ Use WASD-QE to move around.
 #define UNICODE
 #include <windows.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 
 #include <chrono>
@@ -77,13 +78,6 @@ int main(){
     //This one dimensional array will be written on the console at every frame.
     wchar_t *screen = new wchar_t[w*h]; 
     
-    //Fill it with spaces to prevent weird stuff from happening
-    for (int i = 0; i < h; i++){
-        for (int j = 0; j < w; j++){
-            screen[i*w+j] = ' ';
-        }
-    }
-
     screen[Pos(x, y)] = 'O';
 
     //Boilerplate code to set the screen up
