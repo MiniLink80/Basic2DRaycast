@@ -1,3 +1,9 @@
+/*
+This is a template with all the boilerplate code already written.
+There is nothing to change and the only thing to do to render is to modify 
+the screen array inside of the while loop.
+*/
+
 #define UNICODE
 #include <windows.h>
 #include <stdio.h>
@@ -23,7 +29,7 @@ int main(){
         }
     }
 
-    //Boilerplate code to set the screen up
+    //Set the screen up
 	HANDLE hConsole = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
 	SetConsoleActiveScreenBuffer(hConsole);
 	DWORD dwBytesWritten = 0;
