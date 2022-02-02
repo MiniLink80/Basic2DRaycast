@@ -1,7 +1,6 @@
 /*
 This is a doom-like pseudo-3D rendering program. This code was inspired by javidx9's
-first person shooter code. I only copied the rendering logic (writing onto the console efficiently)
-and a weird formula to find the angle of a ray with a variable FOV. 
+first person shooter code. I borrowed the rendering logic (writing onto the console efficiently).
 The rest of the logic is coded by yours truly. 
 The way it works is that several rays are cast from the player (120 to be precise)
 and each ray's intersection point with a wall is found. As soon as a ray hits a wall,
@@ -50,7 +49,7 @@ int map[16][16] = {
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 };
 
-//Cute lil function to find the position with x and y coordinates
+//Function to find the position with x and y coordinates
 int Pos(float x, float y){
     return w*(int)y+(int)x;
 }
@@ -119,7 +118,7 @@ int main(){
         
         //120 rays are cast.
         for (int a = 0; a < w; a++){
-            //Weird formula stolen from javidx9. This is the angle of the current ray.
+            //This is the angle of the current ray.
             float curA = (angle - FOV/2.0f) + ((float)a / (float)w) * FOV;
             
             bool hitWall = false;
